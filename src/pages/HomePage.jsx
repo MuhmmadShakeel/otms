@@ -8,7 +8,7 @@ import Faq from '../component/home/Faq'
 
 function HomePage() {
   return (
-    <div>
+    <div className='overflow-hidden'>
       <Header/>
       <WhyChooseUs/>
       <AboutUs/>
