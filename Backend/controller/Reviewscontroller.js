@@ -1,5 +1,4 @@
 import Reviews from "../model/ReviewsModel.js";
-import User from "../model/UserModel.js";
 export const submitReviews = async (req, res) => {
   try {
     const { reviewstext, rating } = req.body;
@@ -22,7 +21,7 @@ export const submitReviews = async (req, res) => {
 
     // ✅ Create review linked to logged-in user
     const review = await Reviews.create({
-      user: req.userId,          // set by verifyToken middleware
+      userId: req.userId,          // set by verifyToken middleware
       reviewstext: reviewstext.trim(),
       rating,
     });
@@ -43,18 +42,46 @@ export const submitReviews = async (req, res) => {
 
 export const getReviews = async (req, res) => {
   try {
-    const addedreviews = await Reviews.find()
-      .populate('user', 'name role');
 
-    if (!addedreviews || addedreviews.length === 0) {
-      return res.status(404).json({ message: 'No reviews found' });
-    }
+    const reviews = await Reviews.find()
+      .populate("userId", "name role ")
+      .sort({ _id: -1 });
 
-    return res.status(200).json({ addedreviews });
+    res.status(200).json({
+      addedreviews: reviews
+    });
 
   } catch (error) {
-    console.error("GET REVIEWS ERROR:", error);  // VERY IMPORTANT
-    return res.status(500).json({ error: "Internal server error" });
+    console.error("GET REVIEWS ERROR:", error);
+    res.status(500).json({ message: "Server error" });
   }
-}
+};
+
+export const deleteReview = async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    const review = await Reviews.findById(id);
+
+    if (!review) {
+      return res.status(404).json({
+        message: "Review not found"
+      });
+    }
+
+    await Reviews.findByIdAndDelete(id);
+
+    res.status(200).json({
+      message: "Review deleted successfully"
+    });
+
+  } catch (error) {
+    console.error("DELETE REVIEW ERROR:", error);
+
+    res.status(500).json({
+      message: "Server error"
+    });
+  }
+};
 

@@ -2,7 +2,6 @@ import AdminTour from "../model/AdminTourModel.js";
 import cloudinary from "cloudinary";
 import Booked from "../model/BookTourModel.js";
 
-// create admin tour
 export const createAdminTour = async (req, res) => {
   try {
     const { title, description, location, price, duration, startDate } = req.body;
@@ -63,7 +62,6 @@ export const createAdminTour = async (req, res) => {
   }
 };
 
-// fetch all admin tours
 export const getAllAdminTours = async (req, res) => {
   try {
     const tours = await AdminTour.find().sort({ createdAt: -1 });
@@ -81,7 +79,6 @@ export const getAllAdminTours = async (req, res) => {
   }
 };
 
-// fetch single admin tour
 export const getSingleAdminTour = async (req, res) => {
   try {
     const { id } = req.params;
@@ -99,7 +96,6 @@ export const getSingleAdminTour = async (req, res) => {
   }
 };
 
-// update admin tour
 export const updateAdminTour = async (req, res) => {
   try {
     const { id } = req.params;
@@ -139,7 +135,6 @@ export const updateAdminTour = async (req, res) => {
   }
 };
 
-// delete admin tour
 export const deleteAdminTour = async (req, res) => {
   try {
     const { id } = req.params;
@@ -158,7 +153,6 @@ export const deleteAdminTour = async (req, res) => {
   }
 };
 
-// book an admin tour
 export const bookAdminTour = async (req, res) => {
   try {
     const userId = req.userId;
@@ -180,5 +174,52 @@ export const bookAdminTour = async (req, res) => {
   } catch (error) {
     console.error("Admin Booking Error:", error);
     return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getAllBookedTours = async (req, res) => {
+  try {
+
+    const bookings = await Booked.find()
+      .populate("tourId")
+      .populate("userId", "name email")
+      .sort({ createdAt: -1 });
+    res.status(200).json({
+      success: true,
+      count: bookings.length,
+      bookings,
+    });
+
+  } catch (error) {
+
+    console.error("Get All Bookings Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+
+  }
+};
+
+export const deleteTourBookingsByAdmin = async (req, res) => {
+  try {
+    const { tourId } = req.params;
+
+    const deleted = await Booked.deleteMany({ tourId });
+
+    res.status(200).json({
+      success: true,
+      message: "All bookings for this tour deleted",
+      deletedCount: deleted.deletedCount
+    });
+
+  } catch (error) {
+    console.error("Admin Delete Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };

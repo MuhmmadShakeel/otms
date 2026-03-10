@@ -4,19 +4,19 @@ const bookedSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "auth",
       required: true,
     },
-    tourId: {
+    tourId: {               // ⚠ This is the correct field
       type: mongoose.Schema.Types.ObjectId,
-      ref: "tour",
+      ref: "admintour",
       required: true,
     },
+
   },
   { timestamps: true }
 );
 
-// Prevent duplicate booking at database level
 bookedSchema.index({ userId: 1, tourId: 1 }, { unique: true });
 
 const Booked = mongoose.model("booked", bookedSchema);
