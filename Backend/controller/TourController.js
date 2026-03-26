@@ -198,8 +198,6 @@ export const updateTour = async (req, res) => {
 };
 
 
-
-
 export const deleteTour = async (req, res) => {
   try {
     const { id } = req.params;
@@ -234,7 +232,6 @@ export const deleteTour = async (req, res) => {
     });
   }
 };
-
 
 
 
@@ -400,21 +397,21 @@ export const getUserBookedTours = async (req, res) => {
 
 export const deleteUserBooking = async (req, res) => {
   try {
-    const userId = req.userId;
-    const { tourId } = req.params;
+    const userId = req.userId; // from token
 
-    const booking = await Booked.findOneAndDelete({ userId, tourId });
-
-    if (!booking) {
-      return res.status(404).json({
+    if (!userId) {
+      return res.status(400).json({
         success: false,
-        message: "Booking not found",
+        message: "User ID not found"
       });
     }
 
-    res.status(200).json({
+    const result = await Booked.deleteMany({ userId });
+
+    return res.status(200).json({
       success: true,
-      message: "Booking deleted successfully",
+      message: "All user bookings deleted",
+      deletedCount: result.deletedCount
     });
 
   } catch (error) {
@@ -422,11 +419,10 @@ export const deleteUserBooking = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: "Server error"
     });
   }
 };
-
 
 
 

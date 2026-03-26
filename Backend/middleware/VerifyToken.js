@@ -8,7 +8,6 @@ export const authenticateToken = (req, res, next) => {
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ success: false, message: "Unauthorized please login first" });
   }
-
 const token = authHeader.split(" ")[1];
 
   try {

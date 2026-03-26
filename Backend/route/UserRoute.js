@@ -1,11 +1,34 @@
-import { createUser, deleteUser, getAllUsers, getUser, updateUser } from "../controller/UserController.js";
-import { authenticateToken } from "../middleware/VerifyToken.js";
-import upload from "../multer/Upload.js";
-import express from 'express'
-const userRouter=express.Router()
-userRouter.post('/createuser',authenticateToken, upload.single('profileImage'),createUser);
-userRouter.get('/getalluser', getAllUsers);
-userRouter.get('/getuser/:id', getUser);
-userRouter.delete("/deletuser/:id",deleteUser)
-userRouter.put('/updateuser/:id', upload.single('profileImage'), updateUser);
-export default userRouter;
+import express from "express"
+import {createUser,getUser,updateUser,deleteUser} from "../controller/UserController.js"
+import {authenticateToken} from "../middleware/VerifyToken.js"
+import upload from "../multer/Upload.js"
+
+const userRouter = express.Router()
+
+userRouter.post(
+"/createuser",
+authenticateToken,
+upload.single("profileImage"),
+createUser
+)
+
+userRouter.get(
+"/getuser",
+authenticateToken,
+getUser
+)
+
+userRouter.put(
+"/updateuser/:id",
+authenticateToken,
+upload.single("profileImage"),
+updateUser
+)
+
+userRouter.delete(
+"/deleteuser/:id",
+authenticateToken,
+deleteUser
+)
+
+export default userRouter

@@ -4,11 +4,11 @@ const UserSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-   
+   userId:{
+    type:mongoose.Schema.Types.ObjectId
+   },
     role:{
         type:String,
-        enum:['user','admin'],
-        default:'user'
     },
     profileImage:{
         public_id:{

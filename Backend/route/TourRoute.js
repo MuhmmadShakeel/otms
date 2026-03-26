@@ -60,9 +60,6 @@ tourRouter.get("/my-bookings", authenticateToken,getUserBookedTours);
 tourRouter.delete("/booked/:tourId", authenticateToken,deleteUserBooking);
 
 
-
-/* ================= ADMIN ROUTES ================= */
-
 tourRouter.get("/admin/all", getAllTours);
 
 tourRouter.patch("/admin/approve/:id", approveTour);
