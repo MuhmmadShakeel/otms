@@ -317,6 +317,7 @@ export const rejectTour = async (req, res) => {
 };
 
 
+
 export const bookTour = async (req, res) => {
   try {
     const userId = req.userId; // From auth middleware
